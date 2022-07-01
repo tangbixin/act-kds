@@ -1,0 +1,299 @@
+#=================================================
+# https://github.com/P3TERX/Actions-OpenWrt
+# Description: Build OpenWrt using GitHub Actions
+# Lisence: MIT
+# Author: P3TERX
+# Blog: https://p3terx.com
+#=================================================
+
+name: Build OP-S
+
+on:
+  repository_dispatch:
+  workflow_dispatch:
+    inputs:
+      ssh:
+        description: 'SSH connection to Actions'
+        required: false
+        default: 'false'
+
+env:
+
+  TZ: Asia/Shanghai
+  REPO_URL: https://github.com/openwrt/openwrt
+  #REPO_BRANCH: v22.03.0-rc4
+  REPO_BRANCH: master
+  CONFIG_FILE: .config
+  DIY_SH: diy.sh
+  DIY1_SH: diy1.sh
+  FREE_UP_DISK: false
+  UPLOAD_BIN_DIR_FOR_ARTIFACT: false
+  UPLOAD_FIRMWARE_FOR_ARTIFACT: true
+  UPLOAD_FIRMWARE_FOR_RELEASE: false
+  UPLOAD_FIRMWARE_TO_COWTRANSFER: false
+  UPLOAD_FIRMWARE_TO_WETRANSFER: true
+  MTARGET: aarch64_cortex-a53
+  MATRIX_TARGET: ipq807x
+
+
+
+jobs:
+  build:
+    runs-on: Ubuntu-20.04
+    
+    name: Build OpenWrt-S
+
+        
+    steps:
+    - name: Checkout
+      uses: actions/checkout@main
+      with:
+          fetch-depth: 0
+
+    - name: cancel running workflows
+      uses: styfle/cancel-workflow-action@main
+      if: contains(github.event.action, 'cw')
+      with:
+        workflow_id: 4439867
+
+
+    - name: Load Settings.ini
+      run: |
+       
+        source "${GITHUB_WORKSPACE}/devices/common/settings.ini"
+        if [ -f "devices/$MATRIX_TARGET/settings.ini" ]; then
+          source "${GITHUB_WORKSPACE}/devices/$MATRIX_TARGET/settings.ini"
+        fi
+        echo "REPO_URL=${REPO_URL}" >> $GITHUB_ENV
+        echo "REPO_BRANCH=${REPO_BRANCH}" >> $GITHUB_ENV
+        echo "CONFIG_FILE=${CONFIG_FILE}" >> $GITHUB_ENV
+        echo "DIY_SH=${DIY_SH}" >> $GITHUB_ENV
+        echo "FREE_UP_DISK=${FREE_UP_DISK}" >> $GITHUB_ENV
+        echo "UPLOAD_BIN_DIR_FOR_ARTIFACT=${UPLOAD_BIN_DIR_FOR_ARTIFACT}" >> $GITHUB_ENV
+        echo "UPLOAD_FIRMWARE_FOR_ARTIFACT=${UPLOAD_FIRMWARE_FOR_ARTIFACT}" >> $GITHUB_ENV
+        echo "UPLOAD_FIRMWARE_FOR_RELEASE=${UPLOAD_FIRMWARE_FOR_RELEASE}" >> $GITHUB_ENV
+        echo "UPLOAD_FIRMWARE_TO_COWTRANSFER=${UPLOAD_FIRMWARE_TO_COWTRANSFER}" >> $GITHUB_ENV
+        echo "UPLOAD_FIRMWARE_TO_WETRANSFER=${UPLOAD_FIRMWARE_TO_WETRANSFER}" >> $GITHUB_ENV
+        echo "MTARGET=aarch64_cortex-a53" >> $GITHUB_ENV
+        echo ${{ env.REPO_BRANCH }}
+        echo ${{ env.REPO_URL }}
+
+
+
+    - name: Initialization environment
+      env:
+        DEBIAN_FRONTEND: noninteractive
+      run: |
+        ( sudo -E apt-get -qq update
+        sudo -E apt-get -qq install build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-dev patch python3 python2.7 unzip zlib1g-dev lib32gcc-s1 libc6-dev-i386 subversion flex uglifyjs gcc-multilib g++-multilib p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx-ucl libelf-dev autoconf automake libtool autopoint device-tree-compiler ccache xsltproc rename antlr3 gperf wget curl swig rsync
+        sudo -E apt-get -qq purge azure-cli ghc* zulu* hhvm llvm* firefox powershell openjdk* dotnet* google* mysql* php* android*
+        sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
+        sudo -E apt-get -qq autoremove --purge
+        sudo -E apt-get -qq clean ) &
+        sudo timedatectl set-timezone "$TZ"
+        sudo mkdir -p /workdir
+        sudo chown $USER:$GROUPS /workdir
+    
+    - name: Get current date
+      id: date
+      run: |
+        echo "date=$(date +'%m/%d_%Y_%H/%M')" >> $GITHUB_ENV
+        echo "date2=$(date +'%m/%d %Y')" >> $GITHUB_ENV
+        VERSION="$(echo "${{github.event.action}}" | grep -Eo " [0-9.]+" | sed -e 's/ //')" || true
+        [ "$VERSION" ] && echo "VERSION=$VERSION" >> $GITHUB_ENV || echo "VERSION=$(date +'%m.%d')" >> $GITHUB_ENV
+
+    - name: Clone source code
+      working-directory: /workdir
+      run: |
+        echo $REPO_URL
+        REPO_BRANCH="$((curl -gs -H 'Content-Type: application/json' \
+           -H "Authorization: Bearer ${{ secrets.REPO_TOKEN }}" \
+           -X POST -d '{ "query": "query {repository(owner: \"openwrt\", name: \"openwrt\") {refs(refPrefix: \"refs/tags/\", last: 4, orderBy: {field: TAG_COMMIT_DATE, direction: ASC}) {edges {node {name}}}}}"}' https://api.github.com/graphql) | jq -r '.data.repository.refs.edges[].node.name' | grep v22 | tail -n 1)"
+        echo $REPO_BRANCH
+        #REPO_BRANCH="master"
+        echo $REPO_BRANCH
+        
+        
+        git clone  $REPO_URL -b $REPO_BRANCH openwrt
+        if [ "${{ env.REPO_BRANCH }}" ]; then
+          cd openwrt
+          git checkout ${{ env.REPO_BRANCH }}
+        fi
+        ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
+        echo $REPO_BRANCH > openwrt/tbx.tag
+        cat openwrt/tbx.tag
+
+
+
+
+    - name: Load custom configuration, common diy
+      run: |
+        cp -rf devices/common/. openwrt/
+        cp -rf devices/$MATRIX_TARGET/. openwrt/
+        cp -rf devices openwrt/
+        cd openwrt
+        chmod +x devices/common/$DIY_SH
+        /bin/bash "devices/common/$DIY_SH"
+        
+    - name: Load custom configuration, ipq diy
+      run: |
+        cd openwrt
+
+        if [ -f "devices/$MATRIX_TARGET/$DIY_SH" ]; then
+          chmod +x devices/$MATRIX_TARGET/$DIY_SH
+          /bin/bash "devices/$MATRIX_TARGET/$DIY_SH"
+        fi
+
+    - name: Load custom configuration, config
+      run: |
+        cd openwrt 
+    
+        cp -Rf ./diy/* ./ || true
+        if [ -f "devices/$MATRIX_TARGET/default-settings" ]; then
+          echo >> package/*/*/my-default-settings/files/etc/uci-defaults/99-default-settings
+          cat devices/$MATRIX_TARGET/default-settings >> package/*/*/my-default-settings/files/etc/uci-defaults/99-default-settings
+        fi
+        cp -f devices/common/$CONFIG_FILE .config
+        if [ -f "devices/$MATRIX_TARGET/$CONFIG_FILE" ]; then
+          echo >> .config
+          cat devices/$MATRIX_TARGET/$CONFIG_FILE >> .config
+        fi
+
+
+    - name: Load custom config bixyn1
+      run: |
+        cd openwrt
+        chmod +x devices/common/$DIY1_SH
+        /bin/bash "devices/common/$DIY1_SH"
+
+
+
+    - name: Apply patches
+      run: |
+        echo " Apply patches "
+        echo $MATRIX_TARGET
+        cd openwrt
+        find "devices/common/patches" -type f ! -name 'china_mirrors.patch' -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p1 -E --forward"
+        if [ -n "$(ls -A "devices/$MATRIX_TARGET/patches" 2>/dev/null)" ]; then
+          find "devices/$MATRIX_TARGET/patches" -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p1 -E --forward"
+        fi
+        
+    - name: Default PPPOE Setting
+      if: env.PPPOE_USERNAME && env.PPPOE_PASSWD
+      run: |
+        sed -i '$i uci set network.wan.username=${{ env.PPPOE_USERNAME }}' openwrt/package/*/*/my-default-settings/files/etc/uci-defaults/95-default-settings
+        sed -i '$i uci set network.wan.password=${{ env.PPPOE_PASSWD }}' openwrt/package/*/*/my-default-settings/files/etc/uci-defaults/95-default-settings
+        sed -i '$i uci commit network' openwrt/package/*/*/my-default-settings/files/etc/uci-defaults/95-default-settings
+
+    - name: Defconfig
+      run: |
+        cd openwrt
+        make defconfig
+        cat .config
+
+    - name: SSH connection to Actions
+      uses: P3TERX/ssh2actions@v1.0.0
+      if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')
+
+    - name: Download package
+      id: package
+      run: |
+        cd openwrt
+        make download -j$(($(nproc)+1)) &
+        sleep 5
+
+    - name: Cache
+      uses: klever1988/cachewrtbuild@main
+      with:
+        ccache: 'true'
+        clean: ${{ contains(github.event.action, 'nocache') }}
+        prefix: ${{ github.workspace }}/openwrt
+    
+    - name: Compile the firmware
+      id: compile
+      run: |
+        cd openwrt
+        echo -e "$(($(nproc)+1)) thread compile"
+        make -j$(($(nproc)+1)) 
+        sed -i "s/# CONFIG_IB is not set/CONFIG_IB=y/" .config
+        rm -rf staging_dir/toolchain-*/bin/*openwrt-linux-musl-lto-dump
+   
+    - name: Check space usage
+      run: df -hT
+
+    - name: Organize files
+      id: organize
+      continue-on-error: true
+      run: |
+        shopt -s extglob
+        mkdir -p firmware/$MATRIX_TARGET
+        cp -rf openwrt/bin/targets/*/*/*{combined,sysupgrade}* ./firmware/$MATRIX_TARGET/ || true
+        cd openwrt/bin/targets/*/*/
+        mv -f profiles.json profiles.json.b
+        cp $GITHUB_WORKSPACE/openwrt/.config $MATRIX_TARGET.config || true
+        cp $GITHUB_WORKSPACE/openwrt/build_dir/target-*/linux-*/linux-*/.config $MATRIX_TARGET_kernel.config || true
+        mv -f packages ${{ env.KERNEL }}
+        mkdir packages
+        cp -rf ${{ env.KERNEL }}/Packages* packages/
+        cd -
+        rename -v "s/openwrt-/${{ env.VERSION }}-openwrt-/" ./firmware/*/* || true
+        rename -v "s/friendlyarm_//" ./firmware/*/*gz || true
+        rename -v "s/embedfire_//" ./firmware/*/*gz || true
+        rename -v "s/xiaomi_redmi-router/redmi/" ./firmware/*/*bin || true
+        Emoji=("🎉" "🤞" "✨" "🎁" "🎈" "🎄" "🎨" "💋" "🍓" "🍕" "🍉" "💐" "🌴" "🚀" "🛸" "🗽" "⛅" "🌈" "🔥" "⛄" "🐶" "🏅" "🦄" "🐤")
+        echo "EMOJI=${Emoji[$[$RANDOM % ${#Emoji[@]}]]}" >> $GITHUB_ENV
+        
+        echo "bixyn ls dir-------------"
+        pwd
+        echo '--------------------------'
+        ls -l
+        echo '--------------------------'        
+        ls -l ./firmware/$MATRIX_TARGET/
+        echo '--------------------------'
+        ls -l openwrt/bin/targets/
+        echo '--------------------------'
+        ls -l openwrt/bin/targets/ipq807x/generic
+        echo '---bixyn-del-------------------'
+        rm -rf openwrt/bin/targets/ipq807x/generic/5.15*
+        rm -rf openwrt/bin/targets/ipq807x/generic/packages
+        rm -f openwrt/bin/targets/ipq807x/generic/openwrt-imagebuilder-ipq807x-generic.Linux-x86_64.tar.xz
+
+        
+
+
+
+    - name: Upload firmware for artifact
+      uses: actions/upload-artifact@main
+      continue-on-error: true
+      if: env.UPLOAD_FIRMWARE_FOR_ARTIFACT == 'true'
+      with:
+        name: ${{ env.VERSION }}_TBXAX6
+        path: |
+          openwrt/bin/targets/
+        
+
+
+
+
+
+
+
+ 
+
+
+
+
+    - name: Delete workflow runs
+      uses: GitRML/delete-workflow-runs@main
+      continue-on-error: true
+      with:
+        retain_days: 30
+        keep_minimum_runs: 0
+
+    - name: Remove old Releases
+      uses: dev-drprasad/delete-older-releases@master
+      continue-on-error: true
+      if: env.UPLOAD_FIRMWARE_FOR_RELEASE == 'true' && !cancelled()
+      with:
+        keep_latest: 15
+        delete_tags: true
