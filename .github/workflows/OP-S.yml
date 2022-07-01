@@ -212,12 +212,22 @@ jobs:
     - name: Compile the firmware
       id: compile
       run: |
+        shopt -s extglob
         cd openwrt
+        echo 'new compile bixyn........mtarget..........'
+        echo $MTARGET
+        rm -rf staging_dir/!(*$MTARGET*|host)
+        df -hT
+
+
         echo -e "$(($(nproc)+1)) thread compile"
         make -j$(($(nproc)+1)) 
         sed -i "s/# CONFIG_IB is not set/CONFIG_IB=y/" .config
         rm -rf staging_dir/toolchain-*/bin/*openwrt-linux-musl-lto-dump
-   
+  
+        rm -rf staging_dir/toolchain-*/initial
+        
+        
     - name: Check space usage
       run: df -hT
 
