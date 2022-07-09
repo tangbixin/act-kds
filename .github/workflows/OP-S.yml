@@ -158,6 +158,9 @@ jobs:
           echo >> .config
           cat devices/$MATRIX_TARGET/$CONFIG_FILE >> .config
         fi
+        echo '-----------config1-----------'
+        cat .config
+        echo '-----------config2-----------'
 
 
     - name: Load custom config bixyn1
@@ -189,30 +192,9 @@ jobs:
       run: |
         cd openwrt
         make defconfig
-        ##########屏蔽所有USB相关##################
-        sed -i 's/CONFIG_USB_ALI_M5632=y/CONFIG_USB_ALI_M5632=n/g'  .config
-        sed -i 's/CONFIG_USB_AN2720=y/CONFIG_USB_AN2720=n/g'  .config
-        sed -i 's/CONFIG_USB_BELKIN=y/CONFIG_USB_BELKIN=n/g'  .config
-        sed -i 's/CONFIG_USB_ARMLINUX=y/CONFIG_USB_ARMLINUX=n/g'  .config
-        sed -i 's/CONFIG_MEDIA_USB_SUPPORT=y/CONFIG_MEDIA_USB_SUPPORT=n/g'  .config
-        sed -i 's/CONFIG_USB_VIDEO_CLASS_INPUT_EVDEV=y/CONFIG_USB_VIDEO_CLASS_INPUT_EVDEV=n/g'  .config
-        sed -i 's/CONFIG_SND_USB=y/CONFIG_SND_USB=n/g'  .config
-        sed -i 's/CONFIG_USB_HIDDEV=y/CONFIG_USB_HIDDEV=n/g'  .config
-        sed -i 's/CONFIG_USB_OHCI_LITTLE_ENDIAN=y/CONFIG_USB_OHCI_LITTLE_ENDIAN=n/g'  .config
-        sed -i 's/CONFIG_USB_SUPPORT=y/CONFIG_USB_SUPPORT=n/g'  .config
-        sed -i 's/CONFIG_USB_COMMON=y/CONFIG_USB_COMMON=n/g'  .config
-        sed -i 's/CONFIG_USB_ARCH_HAS_HCD=y/CONFIG_USB_ARCH_HAS_HCD=n/g'  .config
-        sed -i 's/CONFIG_USB=y/CONFIG_USB=n/g'  .config
-        sed -i 's/CONFIG_USB_PCI=y/CONFIG_USB_PCI=n/g'  .config
-        sed -i 's/CONFIG_USB_DEFAULT_PERSIST=y/CONFIG_USB_DEFAULT_PERSIST=n/g'  .config
-        sed -i 's/CONFIG_USB_EHCI_ROOT_HUB_TT=y/CONFIG_USB_EHCI_ROOT_HUB_TT=n/g'  .config
-        sed -i 's/CONFIG_USB_EHCI_TT_NEWSCHED=y/CONFIG_USB_EHCI_TT_NEWSCHED=n/g'  .config
-        sed -i 's/CONFIG_USB_DWC3_HOST=y/CONFIG_USB_DWC3_HOST=n/g'  .config
-        sed -i 's/CONFIG_USB_DWC2_HOST=y/CONFIG_USB_DWC2_HOST=n/g'  .config
-        sed -i 's/CONFIG_USB_SERIAL_GENERIC=y/CONFIG_USB_SERIAL_GENERIC=n/g'  .config
-        sed -i 's/CONFIG_USB_PHY=y/CONFIG_USB_PHY=n/g'  .config
-        
+        echo '-----------config3-----------'
         cat .config
+        echo '-----------config4-----------'
 
     - name: SSH connection to Actions
       uses: P3TERX/ssh2actions@v1.0.0
