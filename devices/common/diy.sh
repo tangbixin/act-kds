@@ -51,11 +51,14 @@ date=`date +%m.%d.%Y`
 sed -i -e "/\(# \)\?REVISION:=/c\REVISION:=$date" -e '/VERSION_CODE:=/c\VERSION_CODE:=$(REVISION)' include/version.mk
 
 sed -i \
-	-e "s/+\(luci\|luci-ssl\|uhttpd\)\( \|$\)/\2/" \
-	-e "s/+nginx\( \|$\)/+nginx-ssl\1/" \
 	-e 's/+python\( \|$\)/+python3/' \
 	-e 's?../../lang?$(TOPDIR)/feeds/packages/lang?' \
 	package/feeds/kiddin9/*/Makefile
+
+
+
+
+
 
 (
 if [ -f sdk.tar.xz ]; then
