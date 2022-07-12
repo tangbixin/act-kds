@@ -220,6 +220,7 @@ jobs:
       run: |
         shopt -s extglob
         cd openwrt
+        rm -rf feeds/kiddin9/igb-intel
         echo 'new compile bixyn........mtarget..........'
         echo $MTARGET
         rm -rf staging_dir/!(*$MTARGET*|host)
