@@ -5,23 +5,23 @@ SHELL_FOLDER=$(dirname $(readlink -f "$0"))
 bash $SHELL_FOLDER/../common/kernel_5.15.sh
 
 rm -rf package/boot/uboot-envtools package/firmware/ipq-wifi package/firmware/ath11k* package/qca package/qat
-svn export --force https://github.com/Boos4721/openwrt/trunk/package/boot/uboot-envtools package/boot/uboot-envtools
-svn export --force https://github.com/Boos4721/openwrt/trunk/package/firmware/ipq-wifi package/firmware/ipq-wifi
-svn export --force https://github.com/Boos4721/openwrt/trunk/package/firmware/ath11k-board package/firmware/ath11k-board
-svn export --force https://github.com/Boos4721/openwrt/trunk/package/firmware/ath11k-firmware package/firmware/ath11k-firmware
-svn export --force https://github.com/Boos4721/openwrt/trunk/package/qca package/qca
-svn export --force https://github.com/Boos4721/openwrt/trunk/package/qat package/qat
-# svn export --force https://github.com/Boos4721/openwrt/trunk/package/kernel/mac80211 package/kernel/mac80211
-svn export --force https://github.com/robimarko/openwrt/tags/ipq807x-latest/package/kernel/mac80211 package/kernel/mac80211
+svn export --force https://github.com/tangbixin/boss0703/trunk/package/boot/uboot-envtools package/boot/uboot-envtools
+svn export --force https://github.com/tangbixin/boss0703/trunk/package/firmware/ipq-wifi package/firmware/ipq-wifi
+svn export --force https://github.com/tangbixin/boss0703/trunk/package/firmware/ath11k-board package/firmware/ath11k-board
+svn export --force https://github.com/tangbixin/boss0703/trunk/package/firmware/ath11k-firmware package/firmware/ath11k-firmware
+svn export --force https://github.com/tangbixin/boss0703/trunk/package/qca package/qca
+svn export --force https://github.com/tangbixin/boss0703/trunk/package/qat package/qat
+svn export --force https://github.com/tangbixin/boss0703/trunk/package/kernel/mac80211 package/kernel/mac80211
 
 
 
-svn co https://github.com/Boos4721/openwrt/trunk/target/linux/generic/hack-5.15 target/linux/generic/hack-5.15
-svn co https://github.com/Boos4721/openwrt/trunk/target/linux/generic/pending-5.15 target/linux/generic/pending-5.15
+
+svn co https://github.com/tangbixin/boss0703/trunk/target/linux/generic/hack-5.15 target/linux/generic/hack-5.15
+svn co https://github.com/tangbixin/boss0703/trunk/target/linux/generic/pending-5.15 target/linux/generic/pending-5.15
 rm -rf target/linux/ipq807x/!(patches-5.15)
-svn co https://github.com/Boos4721/openwrt/trunk/target/linux/ipq807x target/linux/ipq807x
+svn co https://github.com/tangbixin/boss0703/trunk/target/linux/ipq807x target/linux/ipq807x
 rm -rf target/linux/ipq807x/{.svn,patches-5.15/.svn}
-svn co https://github.com/Boos4721/openwrt/trunk/target/linux/ipq807x/patches-5.15 target/linux/ipq807x/patches-5.15
+svn co https://github.com/tangbixin/boss0703/trunk/target/linux/ipq807x/patches-5.15 target/linux/ipq807x/patches-5.15
 
 sed -i 's/autocore-arm /autocore-arm /' target/linux/ipq807x/Makefile
 sed -i 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += luci-app-turboacc/' target/linux/ipq807x/Makefile
