@@ -7,6 +7,10 @@ latest="$(curl -sfL https://github.com/openwrt/openwrt/commits/master/include | 
 mkdir new; cp -rf .git new/.git
 echo 'bixyn latest------------'
 echo $latest
+latest='f1cd14448221d6114c6c150a8e78fa360bbb47dd'
+
+
+
 cd new
 [ "$latest" ] && git reset --hard $latest || git reset --hard origin/master
 git checkout HEAD^
