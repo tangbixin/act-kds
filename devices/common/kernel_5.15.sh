@@ -5,6 +5,8 @@ echo 'tbxbixyn kernel_5.15.sh'
 rm -rf target/linux package/kernel package/boot package/firmware/linux-firmware include/{kernel-*,netfilter.mk}
 latest="$(curl -sfL https://github.com/openwrt/openwrt/commits/master/include | grep -o 'href=".*>kernel: bump 5.15' | head -1 | cut -d / -f 5 | cut -d '"' -f 1)"
 mkdir new; cp -rf .git new/.git
+echo 'bixyn latest------------'
+echo $latest
 cd new
 [ "$latest" ] && git reset --hard $latest || git reset --hard origin/master
 git checkout HEAD^
@@ -13,6 +15,9 @@ cp -rf --parents target/linux package/kernel package/boot package/firmware/linux
 cd -
 
 kernel_v="$(cat include/kernel-5.15 | grep LINUX_KERNEL_HASH-* | cut -f 2 -d - | cut -f 1 -d ' ')"
+echo 'bixyn kernel_v------------'
+echo $kernel_v
+
 echo "KERNEL=${kernel_v}" >> $GITHUB_ENV || true
 sed -i "s?targets/%S/.*'?targets/%S/$kernel_v'?" include/feeds.mk
 
