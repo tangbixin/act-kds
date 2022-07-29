@@ -274,7 +274,7 @@ jobs:
         rm -rf openwrt/bin/targets/ipq807x/generic/5.15*
         rm -rf openwrt/bin/targets/ipq807x/generic/packages
         rm -f openwrt/bin/targets/ipq807x/generic/openwrt-imagebuilder-ipq807x-generic.Linux-x86_64.tar.xz
-
+        rm -f openwrt/bin/targets/ipq807x/generic/openwrt-ipq807x*.bin
         
 
 
