@@ -221,6 +221,7 @@ jobs:
         shopt -s extglob
         cd openwrt
         rm -rf feeds/kiddin9/igb-intel
+        rm -rf feeds/kiddin9/rtl8189es feeds/kiddin9/rtl88x2bu feeds/kiddin9/rtl8821cu
         echo 'new compile bixyn........mtarget..........'
         echo $MTARGET
         rm -rf staging_dir/!(*$MTARGET*|host)
