@@ -285,7 +285,7 @@ jobs:
       continue-on-error: true
       if: env.UPLOAD_FIRMWARE_FOR_ARTIFACT == 'true'
       with:
-        name: ${{ env.VERSION }}_TBXAX6_nossr
+        name: ${{ env.VERSION }}_TBXAX6_noall_upnp
         path: |
           openwrt/bin/targets/
         
