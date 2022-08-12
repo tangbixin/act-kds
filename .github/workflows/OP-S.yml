@@ -115,7 +115,8 @@ jobs:
         echo $REPO_BRANCH
         
         
-        git clone  $REPO_URL -b $REPO_BRANCH openwrt
+        #git clone  $REPO_URL -b $REPO_BRANCH openwrt
+        git clone https://github.com/robimarko/openwrt -b ipq807x-5.15-pr openwrt
         if [ "${{ env.REPO_BRANCH }}" ]; then
           cd openwrt
           git checkout ${{ env.REPO_BRANCH }}
