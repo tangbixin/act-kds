@@ -31,12 +31,12 @@ echo ''>feeds/kiddin9/my-default-settings/files/usr/lib/lua/luci/view/admin_stat
 
 
 #其他软件包安装，可以指定版本指定目录（经验证clash出问题）
+##svn是分支类别+分支名，例如trunk、branches/2.x、tags/2.0。
 # git clone https://github.com/vernesong/OpenClash.git package/OpenClash
 # svn co https://github.com/vernesong/OpenClash/trunk/luci-app-openclash package/luci-app-openclash
 ########## svn co https://github.com/vernesong/OpenClash/tags/v0.45.22-beta/luci-app-openclash  package/luci-app-openclash
 #删除重复的软件包
 ########## rm -rf feeds/kiddin9/luci-app-openclash
-rm -rf feeds/kiddin9/luci-app-opkg
-##svn是分支类别+分支名，例如trunk、branches/2.x、tags/2.0。
-svn co https://github.com/openwrt/luci/branches/openwrt-22.03/applications/luci-app-opkg package/luci-app-opkg
+#rm -rf feeds/kiddin9/luci-app-opkg
+#svn co https://github.com/openwrt/luci/branches/openwrt-22.03/applications/luci-app-opkg package/luci-app-opkg
 
