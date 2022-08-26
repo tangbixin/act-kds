@@ -38,4 +38,4 @@ echo ''>feeds/kiddin9/my-default-settings/files/usr/lib/lua/luci/view/admin_stat
 ########## rm -rf feeds/kiddin9/luci-app-openclash
 rm -rf feeds/kiddin9/luci-app-opkg
 ##svn co https://github.com/openwrt/luci/tree/openwrt-21.02/applications/luci-app-opkg package/luci-app-opkg
-svn co https://github.com/openwrt/luci/trunk/openwrt-21.02/applications/luci-app-opkg package/luci-app-opkg
+svn co https://github.com/openwrt/luci/trunk/applications/luci-app-opkg package/luci-app-opkg
