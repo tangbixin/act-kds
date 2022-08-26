@@ -37,5 +37,6 @@ echo ''>feeds/kiddin9/my-default-settings/files/usr/lib/lua/luci/view/admin_stat
 #删除重复的软件包
 ########## rm -rf feeds/kiddin9/luci-app-openclash
 rm -rf feeds/kiddin9/luci-app-opkg
-##svn co https://github.com/openwrt/luci/tree/openwrt-21.02/applications/luci-app-opkg package/luci-app-opkg
-svn co https://github.com/openwrt/luci/trunk/applications/luci-app-opkg package/luci-app-opkg
+##svn是分支类别+分支名，例如trunk、branches/2.x、tags/2.0。
+svn co https://github.com/openwrt/luci/branches/openwrt-22.03/applications/luci-app-opkg package/luci-app-opkg
+
