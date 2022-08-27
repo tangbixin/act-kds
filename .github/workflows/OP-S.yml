@@ -175,6 +175,7 @@ jobs:
         ls -l feeds/kiddin9/luci-app-opkg/root/usr/libexec/opkg-call
         rm -f feeds/kiddin9/luci-app-opkg/root/usr/libexec/opkg-call
         cp  devices/common/opkg-call feeds/kiddin9/luci-app-opkg/root/usr/libexec/opkg-call
+        chmod +x feeds/kiddin9/luci-app-opkg/root/usr/libexec/opkg-call
         ls -l feeds/kiddin9/luci-app-opkg/root/usr/libexec/opkg-call
 
 
