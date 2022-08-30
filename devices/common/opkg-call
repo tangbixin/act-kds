@@ -35,8 +35,15 @@ case "$action" in
 			if flock -x 200; then
 				$opkg $action "$@" </dev/null >/tmp/opkg.out 2>/tmp/opkg.err
 				code=$?
-				touch /tmp/opkg.out
-				touch /tmp/opkg.err
+                                if [ ! -f "/tmp/opkg.out" ]                                                  
+                                then                                                                         
+                                     touch /tmp/opkg.out                                    
+                                fi                                                          
+                                                                                            
+                                if [ ! -f "/tmp/opkg.err" ]                                 
+                                then                                                        
+                                     touch /tmp/opkg.err                                    
+                                fi                        
 				stdout=$(cat /tmp/opkg.out)
 				stderr=$(cat /tmp/opkg.err)
 			else
