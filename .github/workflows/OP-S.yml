@@ -21,7 +21,7 @@ env:
 
   TZ: Asia/Shanghai
   REPO_URL: https://github.com/openwrt/openwrt
-  REPO_BRANCH: v22.03.0-rc6
+  REPO_BRANCH: v22.03.0-rc4
   # REPO_BRANCH: master
   CONFIG_FILE: .config
   DIY_SH: diy.sh
@@ -111,7 +111,7 @@ jobs:
         #   -X POST -d '{ "query": "query {repository(owner: \"openwrt\", name: \"openwrt\") {refs(refPrefix: \"refs/tags/\", last: 4, orderBy: {field: TAG_COMMIT_DATE, direction: ASC}) {edges {node {name}}}}}"}' https://api.github.com/graphql) | jq -r '.data.repository.refs.edges[].node.name' | grep v22 | tail -n 1)"
         echo '--------bixyn1-----'
         echo $REPO_BRANCH
-        REPO_BRANCH="v22.03.0-rc6"
+        REPO_BRANCH="v22.03.0-rc4"
         echo $REPO_BRANCH
         
         
