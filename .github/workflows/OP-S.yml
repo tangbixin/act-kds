@@ -112,7 +112,7 @@ jobs:
         #   -H "Authorization: Bearer ${{ secrets.REPO_TOKEN }}" \
         #   -X POST -d '{ "query": "query {repository(owner: \"openwrt\", name: \"openwrt\") {refs(refPrefix: \"refs/tags/\", last: 4, orderBy: {field: TAG_COMMIT_DATE, direction: ASC}) {edges {node {name}}}}}"}' https://api.github.com/graphql) | jq -r '.data.repository.refs.edges[].node.name' | grep v22 | tail -n 1)"
         echo '--------bixyn1-----'
-        REPO_BRANCH=v22.03.3
+        REPO_BRANCH="v22.03.3"
         echo $REPO_BRANCH
 
         
