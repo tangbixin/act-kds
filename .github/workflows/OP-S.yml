@@ -136,6 +136,7 @@ jobs:
         cp -rf devices openwrt/
         cd openwrt
         chmod +x devices/common/$DIY_SH
+	echo "1Running script: $(realpath devices/common/$DIY_SH)"
         /bin/bash "devices/common/$DIY_SH"
         
     - name: Load custom configuration, ipq diy
@@ -143,6 +144,7 @@ jobs:
         cd openwrt
         if [ -f "devices/$MATRIX_TARGET/$DIY_SH" ]; then
           chmod +x devices/$MATRIX_TARGET/$DIY_SH
+	  echo "2Running script: $(realpath devices/$MATRIX_TARGET/$DIY_SH)"
           /bin/bash "devices/$MATRIX_TARGET/$DIY_SH"
         fi
 
@@ -168,6 +170,7 @@ jobs:
       run: |
         cd openwrt
         chmod +x devices/common/$DIY1_SH
+	echo "Running script: $(realpath devices/common/$DIY1_SH)"
         /bin/bash "devices/common/$DIY1_SH"
         
         echo "bixyn replace opkg-call"
@@ -294,6 +297,13 @@ jobs:
           openwrt/bin/targets/
         
 
+
+
+
+
+
+
+ 
 
 
 
