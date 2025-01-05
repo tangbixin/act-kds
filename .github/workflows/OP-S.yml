@@ -1,3 +1,6 @@
+下面的代码，请把两处v22.03.0-rc6  合并为一个变量的引用方式
+
+
 #=================================================
 # https://github.com/P3TERX/Actions-OpenWrt
 # Description: Build OpenWrt using GitHub Actions
@@ -42,7 +45,6 @@ env:
 jobs:
   build:
     runs-on: Ubuntu-20.04
-    
     name: Build OpenWrt-S
 
         
@@ -61,7 +63,6 @@ jobs:
 
     - name: Load Settings.ini
       run: |
-       
         source "${GITHUB_WORKSPACE}/devices/common/settings.ini"
         if [ -f "devices/$MATRIX_TARGET/settings.ini" ]; then
           source "${GITHUB_WORKSPACE}/devices/$MATRIX_TARGET/settings.ini"
@@ -113,11 +114,11 @@ jobs:
         #   -H "Authorization: Bearer ${{ secrets.REPO_TOKEN }}" \
         #   -X POST -d '{ "query": "query {repository(owner: \"openwrt\", name: \"openwrt\") {refs(refPrefix: \"refs/tags/\", last: 4, orderBy: {field: TAG_COMMIT_DATE, direction: ASC}) {edges {node {name}}}}}"}' https://api.github.com/graphql) | jq -r '.data.repository.refs.edges[].node.name' | grep v22 | tail -n 1)"
         echo '--------bixyn1-----'
-        REPO_BRANCH="v22.03.0-rc6"
+        #REPO_BRANCH="v22.03.0-rc6"
+	REPO_BRANCH="${{ env.REPO_BRANCH }}" 
+	echo "rc6............."
         echo $REPO_BRANCH
 
-        
-        
         git clone  $REPO_URL -b $REPO_BRANCH openwrt
         #git clone https://github.com/robimarko/openwrt -b ipq807x-5.15-pr openwrt
         if [ "${{ env.REPO_BRANCH }}" ]; then
@@ -143,7 +144,6 @@ jobs:
     - name: Load custom configuration, ipq diy
       run: |
         cd openwrt
-
         if [ -f "devices/$MATRIX_TARGET/$DIY_SH" ]; then
           chmod +x devices/$MATRIX_TARGET/$DIY_SH
           /bin/bash "devices/$MATRIX_TARGET/$DIY_SH"
@@ -152,7 +152,6 @@ jobs:
     - name: Load custom configuration, config
       run: |
         cd openwrt 
-    
         cp -Rf ./diy/* ./ || true
         if [ -f "devices/$MATRIX_TARGET/default-settings" ]; then
           echo >> package/*/*/my-default-settings/files/etc/uci-defaults/99-default-settings
@@ -288,8 +287,6 @@ jobs:
         rm -f openwrt/bin/targets/ipq807x/generic/openwrt-ipq807x*.bin
         
 
-
-
     - name: Upload firmware for artifact
       uses: actions/upload-artifact@main
       continue-on-error: true
@@ -300,13 +297,6 @@ jobs:
           openwrt/bin/targets/
         
 
-
-
-
-
-
-
- 
 
 
 
