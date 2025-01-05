@@ -5,7 +5,7 @@ SHELL_FOLDER=$(dirname $(readlink -f "$0"))
 bash $SHELL_FOLDER/../common/kernel_5.15.sh
 
 rm -rf package/boot/uboot-envtools package/firmware/ipq-wifi package/firmware/ath11k* package/qca package/qat
-REPO_URL=""${REPO_URL}"
+REPO_URL="https://github.com/tangbixin/boos0629/trunk"
 svn export --force "${REPO_URL}/package/boot/uboot-envtools" package/boot/uboot-envtools
 svn export --force "${REPO_URL}/package/firmware/ipq-wifi" package/firmware/ipq-wifi
 svn export --force "${REPO_URL}/package/firmware/ath11k-board" package/firmware/ath11k-board
