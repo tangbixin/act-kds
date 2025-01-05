@@ -170,7 +170,7 @@ jobs:
       run: |
         cd openwrt
         chmod +x devices/common/$DIY1_SH
-	echo "Running script: $(realpath devices/common/$DIY1_SH)"
+        echo "Running script: $(realpath devices/common/$DIY1_SH)"
         /bin/bash "devices/common/$DIY1_SH"
         
         echo "bixyn replace opkg-call"
