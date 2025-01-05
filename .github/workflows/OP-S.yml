@@ -46,6 +46,9 @@ jobs:
 
         
     steps:
+    - name: Check SVN version
+      run: svn --version
+      
     - name: Checkout
       uses: actions/checkout@main
       with:
