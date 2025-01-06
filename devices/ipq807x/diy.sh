@@ -4,32 +4,37 @@ shopt -s extglob
 SHELL_FOLDER=$(dirname $(readlink -f "$0"))
 bash $SHELL_FOLDER/../common/kernel_5.15.sh
 
+
+
+
+
 REPO_URL="https://github.com/tangbixin/boos0629.git"
 BRANCH="main"
 
-# 克隆仓库到临时目录
-TEMP_DIR=$(mktemp -d)
-git clone --depth 1 --branch "${BRANCH}" "${REPO_URL}" "${TEMP_DIR}"
+# 克隆仓库并初始化稀疏检出
+git clone --depth 1 --branch "${BRANCH}" "${REPO_URL}"
+cd $(basename "$REPO_URL" .git)
 
-# 函数：复制目录
-copy_dir() {
-    local src=$1
-    local dest=$2
-    rm -rf "${dest}"
-    cp -r "${TEMP_DIR}/${src}" "${dest}"
-}
+# 启用稀疏检出
+git sparse-checkout init --cone
 
-# 批量复制需要的目录
-copy_dir "package/boot/uboot-envtools" "package/boot/uboot-envtools"
-copy_dir "package/firmware/ipq-wifi" "package/firmware/ipq-wifi"
-copy_dir "package/firmware/ath11k-board" "package/firmware/ath11k-board"
-copy_dir "package/firmware/ath11k-firmware" "package/firmware/ath11k-firmware"
-copy_dir "package/qca" "package/qca"
-copy_dir "package/qat" "package/qat"
-copy_dir "package/kernel/mac80211" "package/kernel/mac80211"
-copy_dir "target/linux/generic/hack-5.15" "target/linux/generic/hack-5.15"
-copy_dir "target/linux/generic/pending-5.15" "target/linux/generic/pending-5.15"
-copy_dir "target/linux/ipq807x" "target/linux/ipq807x"
+# 配置要下载的特定目录
+git sparse-checkout set package/boot/uboot-envtools
+git sparse-checkout set package/firmware/ipq-wifi
+git sparse-checkout set package/firmware/ath11k-board
+git sparse-checkout set package/firmware/ath11k-firmware
+git sparse-checkout set package/qca
+git sparse-checkout set package/qat
+git sparse-checkout set package/kernel/mac80211
+git sparse-checkout set target/linux/generic/hack-5.15
+git sparse-checkout set target/linux/generic/pending-5.15
+git sparse-checkout set target/linux/ipq807x
+
+
+echo "[log]当前目录“
+pwd
+ls
+
 
 # 清理 .git 文件夹
 rm -rf target/linux/ipq807x/.git target/linux/ipq807x/patches-5.15/.git
