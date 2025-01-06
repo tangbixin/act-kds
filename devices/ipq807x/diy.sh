@@ -35,13 +35,13 @@ git sparse-checkout set target/linux/ipq807x
 
 # cd -
 
-echo "[log]11当前目录"
+echo "[log]11当前目录 target/linux/"
 pwd
-ls
+ls target/linux/
 
 
 # 清理 .git 文件夹
-rm -rf target/linux/ipq807x/.git target/linux/ipq807x/patches-5.15/.git
+# rm -rf target/linux/ipq807x/.git target/linux/ipq807x/patches-5.15/.git
 
 
 
