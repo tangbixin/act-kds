@@ -27,9 +27,23 @@ mv -f feeds/kiddin9/r81* tmp/
 sed -i "s/192.168.1/10.0.0/" package/feeds/kiddin9/base-files/files/bin/config_generate
 
 (
-svn export --force https://github.com/coolsnowwolf/lede/trunk/tools/upx tools/upx
-svn export --force https://github.com/coolsnowwolf/lede/trunk/tools/ucl tools/ucl
-svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/generic/hack-5.10 target/linux/generic/hack-5.10
+
+git clone --depth=1 --filter=blob:none --sparse https://github.com/coolsnowwolf/lede.git
+cd lede
+git sparse-checkout set tools/upx
+cd -
+git clone --depth=1 --filter=blob:none --sparse https://github.com/coolsnowwolf/lede.git
+cd lede
+git sparse-checkout set tools/ucl
+cd -
+git clone --depth=1 --filter=blob:none --sparse https://github.com/coolsnowwolf/lede.git
+cd lede
+git sparse-checkout set target/linux/generic/hack-5.10
+cd -
+
+
+
+
 rm -rf target/linux/generic/hack-5.10/{220-gc_sections*,781-dsa-register*,780-drivers-net*}
 ) &
 
