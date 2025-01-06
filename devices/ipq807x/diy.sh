@@ -3,7 +3,7 @@ shopt -s extglob
 
 SHELL_FOLDER=$(dirname $(readlink -f "$0"))
 bash $SHELL_FOLDER/../common/kernel_5.15.sh
-
+echo "kernel_5.15.sh执行完成！！！！！！“
 
 echo "[log]10当前目录“
 pwd
@@ -15,7 +15,7 @@ BRANCH="main"
 
 # 克隆仓库并初始化稀疏检出
 git clone --depth 1 --branch "${BRANCH}" "${REPO_URL}"
-cd $(basename "$REPO_URL" .git)
+
 
 # 启用稀疏检出
 git sparse-checkout init --cone
