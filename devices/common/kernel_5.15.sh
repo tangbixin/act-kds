@@ -28,10 +28,17 @@ sed -i "s?targets/%S/.*'?targets/%S/$kernel_v'?" include/feeds.mk
 rm -rf target/linux/generic/pending-5.15/444-mtd-nand-rawnand-add-support-for-Toshiba-TC58NVG0S3H.patch
 
 sh -c "curl -sfL https://github.com/coolsnowwolf/lede/commit/06fcdca1bb9c6de6ccd0450a042349892b372220.patch | patch -d './' -p1 --forward"
-svn export --force https://github.com/openwrt/packages/trunk/kernel feeds/packages/kernel
-svn export --force  https://github.com/openwrt/packages/trunk/net/xtables-addons feeds/packages/net/xtables-addons
 
-svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/generic/hack-5.15 target/linux/generic/hack-5.15
+git clone --depth=1 --filter=blob:none --sparse https://github.com/openwrt/packages.git feeds/packages
+cd feeds/packages
+git sparse-checkout set kernel net/xtables-addons
+cd -
+
+git clone --depth=1 --filter=blob:none --sparse https://github.com/coolsnowwolf/lede.git target/linux/generic
+cd target/linux/generic
+git sparse-checkout set target/linux/generic/hack-5.15
+cd -
+
 rm -rf target/linux/generic/hack-5.15/{220-gc_sections*,781-dsa-register*,780-drivers-net*}
 curl -sfL https://raw.githubusercontent.com/openwrt/openwrt/openwrt-22.03/package/kernel/linux/modules/video.mk -o package/kernel/linux/modules/video.mk
 
