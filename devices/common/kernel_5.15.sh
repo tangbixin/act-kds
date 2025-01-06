@@ -91,38 +91,14 @@ rm -rf target/linux/generic/pending-5.15/444-mtd-nand-rawnand-add-support-for-To
 
 sh -c "curl -sfL https://github.com/coolsnowwolf/lede/commit/06fcdca1bb9c6de6ccd0450a042349892b372220.patch | patch -d './' -p1 --forward"
 
+git clone --depth=1 --single-branch --branch "main" https://github.com/openwrt/packages.git feeds/packages/kernel
+git clone --depth=1 --single-branch --branch "main" https://github.com/openwrt/packages.git feeds/packages/net/xtables-addons
+git clone --depth=1 --single-branch --branch "main" https://github.com/coolsnowwolf/lede.git target/linux/generic/hack-5.15
+
+
+
 # 克隆前清理现有目录
 rm -rf feeds/packages target/linux/generic
-# 克隆并只获取 kernel 和 xtables-addons 目录
-
-
-
-
-
-echo "[LOG] 克隆 packages 仓库"
-git clone --depth=1 --branch 20230609 https://github.com/coolsnowwolf/lede.git|| { echo "[ERROR] 克隆 packages 仓库失败"; exit 1;}
-cd packages || exit
-git sparse-checkout init --cone
-git sparse-checkout set kernel net/xtables-addons || {
-    echo "[ERROR] sparse-checkout 设置失败"; exit 1;
-}
-cd ..
-
-echo "[LOG] 克隆 lede 仓库"
-git clone --depth=1 --branch 20230609 https://github.com/coolsnowwolf/lede.git|| { echo "[ERROR] 克隆 packages 仓库失败"; exit 1;}
-#git clone --depth=1 --filter=blob:none --sparse https://github.com/coolsnowwolf/lede.git || {    echo "[ERROR] 克隆 lede 仓库失败"; exit 1;}
-cd lede || exit
-git sparse-checkout init --cone
-git sparse-checkout set target/linux/generic/hack-5.15 || {
-    echo "[ERROR] sparse-checkout 设置失败"; exit 1;
-}
-cd ..
-
-# 检查目标文件是否存在
-if [ ! -f "target/linux/ipq807x/config-5.15" ]; then
-    echo "[ERROR] 文件 target/linux/ipq807x/config-5.15 不存在"
-    exit 1
-fi
 
 
 
