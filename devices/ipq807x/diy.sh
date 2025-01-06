@@ -3,15 +3,15 @@ shopt -s extglob
 
 SHELL_FOLDER=$(dirname $(readlink -f "$0"))
 bash $SHELL_FOLDER/../common/kernel_5.15.sh
-echo "kernel_5.15.sh执行完成！！！！！！“
+echo "kernel_5.15.sh执行完成！！！！！"
 
-echo "[log]10当前目录“
+echo "[log]10当前目录"
 pwd
 ls
 
 
 REPO_URL="https://github.com/tangbixin/boos0629.git"
-BRANCH="main"
+BRANCH="master"
 
 echo "开始克隆 repository ${REPO_URL} with branch ${BRANCH}"
 # 克隆仓库并初始化稀疏检出
