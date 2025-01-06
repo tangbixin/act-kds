@@ -35,7 +35,7 @@ git sparse-checkout set target/linux/ipq807x
 
 cd -
 
-echo "[log]11当前目录“
+echo "[log]11当前目录"
 pwd
 ls
 
@@ -43,8 +43,7 @@ ls
 # 清理 .git 文件夹
 rm -rf target/linux/ipq807x/.git target/linux/ipq807x/patches-5.15/.git
 
-# 清理临时目录
-rm -rf "${TEMP_DIR}"
+
 
 # 修改 Makefile
 sed -i 's/autocore-arm /autocore-arm /' target/linux/ipq807x/Makefile
