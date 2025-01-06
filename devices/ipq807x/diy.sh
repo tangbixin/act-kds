@@ -10,29 +10,46 @@ pwd
 
 
 
+
+# 远程仓库 URL 和分支名
 REPO_URL="https://github.com/tangbixin/boos0629.git"
 BRANCH="master"
 
-echo "开始克隆 repository ${REPO_URL} with branch ${BRANCH}"
-# 克隆仓库并初始化稀疏检出
-git clone --depth 1 --branch "${BRANCH}" "${REPO_URL}" .
-echo "[log]查看远程仓库结构"
-git ls-tree -r HEAD --name-only | grep "target/linux/ipq807x"
+# 要下载的特定目录列表
+TARGET_PATHS=(
+  "package/boot/uboot-envtools"
+  "package/firmware/ipq-wifi"
+  "package/firmware/ath11k-board"
+  "package/firmware/ath11k-firmware"
+  "package/qca"
+  "package/qat"
+  "package/kernel/mac80211"
+  "target/linux/generic/hack-5.15"
+  "target/linux/generic/pending-5.15"
+  "target/linux/ipq807x"
+)
 
-# 启用稀疏检出
-git sparse-checkout init --cone
+# 初始化一个临时目录
+TEMP_DIR=$(mktemp -d)
+echo "临时目录: $TEMP_DIR"
 
-# 配置要下载的特定目录
-git sparse-checkout set package/boot/uboot-envtools
-git sparse-checkout set package/firmware/ipq-wifi
-git sparse-checkout set package/firmware/ath11k-board
-git sparse-checkout set package/firmware/ath11k-firmware
-git sparse-checkout set package/qca
-git sparse-checkout set package/qat
-git sparse-checkout set package/kernel/mac80211
-git sparse-checkout set target/linux/generic/hack-5.15
-git sparse-checkout set target/linux/generic/pending-5.15
-git sparse-checkout set target/linux/ipq807x
+# 克隆仓库到临时目录
+git clone --depth 1 --branch "$BRANCH" "$REPO_URL" "$TEMP_DIR"
+
+# 在当前目录拉取指定的文件或目录
+for path in "${TARGET_PATHS[@]}"; do
+  echo "正在覆盖文件或目录: $path"
+  mkdir -p "$(dirname "$path")"  # 创建本地目录
+  cp -r "$TEMP_DIR/$path" "$path" || echo "拉取失败: $path"
+done
+
+# 删除临时目录
+rm -rf "$TEMP_DIR"
+echo "操作完成！"
+
+
+
+
 
 echo "[log]稀疏检出后，当前下载的目录"
 ls -R target/linux/ipq807x
