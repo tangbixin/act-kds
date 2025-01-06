@@ -125,7 +125,7 @@ echo "[LOG] 5当前目录结构："
 pwd
 ls
 
-echo "tbx1:"
+echo "[LOG] 6   target/linux/目录结构："
 ls target/linux/
 
 sed -i "s/tty\(0\|1\)::askfirst/tty\1::respawn/g" target/linux/*/base-files/etc/inittab
