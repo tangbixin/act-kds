@@ -100,9 +100,7 @@ rm -rf feeds/packages target/linux/generic
 
 
 echo "[LOG] 克隆 packages 仓库"
-git clone --depth=1 --filter=blob:none --sparse https://github.com/openwrt/packages.git || {
-    echo "[ERROR] 克隆 packages 仓库失败"; exit 1;
-}
+git clone --depth=1 --branch 20230609 https://github.com/coolsnowwolf/lede.git|| { echo "[ERROR] 克隆 packages 仓库失败"; exit 1;}
 cd packages || exit
 git sparse-checkout init --cone
 git sparse-checkout set kernel net/xtables-addons || {
@@ -111,9 +109,8 @@ git sparse-checkout set kernel net/xtables-addons || {
 cd ..
 
 echo "[LOG] 克隆 lede 仓库"
-git clone --depth=1 --filter=blob:none --sparse https://github.com/coolsnowwolf/lede.git || {
-    echo "[ERROR] 克隆 lede 仓库失败"; exit 1;
-}
+git clone --depth=1 --branch 20230609 https://github.com/coolsnowwolf/lede.git|| { echo "[ERROR] 克隆 packages 仓库失败"; exit 1;}
+#git clone --depth=1 --filter=blob:none --sparse https://github.com/coolsnowwolf/lede.git || {    echo "[ERROR] 克隆 lede 仓库失败"; exit 1;}
 cd lede || exit
 git sparse-checkout init --cone
 git sparse-checkout set target/linux/generic/hack-5.15 || {
