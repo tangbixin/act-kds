@@ -52,7 +52,6 @@ echo "操作完成！"
 
 
 echo "[log]稀疏检出后，当前下载的目录"
-ls -R target/linux/ipq807x
 
 # cd -
 
