@@ -7,7 +7,7 @@ echo "kernel_5.15.sh执行完成！！！！！"
 
 echo "[log]10当前目录"
 pwd
-ls
+
 
 
 REPO_URL="https://github.com/tangbixin/boos0629.git"
