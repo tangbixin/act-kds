@@ -91,17 +91,56 @@ rm -rf target/linux/generic/pending-5.15/444-mtd-nand-rawnand-add-support-for-To
 
 sh -c "curl -sfL https://github.com/coolsnowwolf/lede/commit/06fcdca1bb9c6de6ccd0450a042349892b372220.patch | patch -d './' -p1 --forward"
 
-git clone --depth=1 --single-branch --branch "main" https://github.com/openwrt/packages.git feeds/packages || {    echo "[ERROR] 克隆 OpenWrt packages 仓库失败"; exit 1;}
-cd feeds/packages
-git reset --hard origin/main && cd -
 
-git clone --depth=1 --single-branch --branch "main" https://github.com/openwrt/packages.git feeds/packages/net/xtables-addons || { echo "[ERROR] 克隆 xtables-addons 仓库失败"; exit 1;}
-cd feeds/packages/net/xtables-addons
-git reset --hard origin/main && cd -
 
-git clone --depth=1 --single-branch --branch "main" https://github.com/coolsnowwolf/lede.git target/linux/generic/hack-5.15 || { echo "[ERROR] 克隆 lede 仓库失败"; exit 1;}
-cd target/linux/generic/hack-5.15
-git reset --hard origin/main && cd -
+
+
+
+
+
+
+# 下载 feeds/packages/kernel
+echo "[LOG] 下载 feeds/packages/kernel"
+rm -rf feeds/packages/kernel
+mkdir -p feeds/packages && cd feeds/packages
+git init kernel && cd kernel
+git remote add origin https://github.com/openwrt/packages.git
+git sparse-checkout set --cone kernel
+git pull --depth=1 origin master
+cd ../../..
+
+# 下载 feeds/packages/net/xtables-addons
+echo "[LOG] 下载 feeds/packages/net/xtables-addons"
+rm -rf feeds/packages/net/xtables-addons
+mkdir -p feeds/packages/net && cd feeds/packages/net
+git init xtables-addons && cd xtables-addons
+git remote add origin https://github.com/openwrt/packages.git
+git sparse-checkout set --cone net/xtables-addons
+git pull --depth=1 origin master
+cd ../../../..
+
+# 下载 target/linux/generic/hack-5.15
+echo "[LOG] 下载 target/linux/generic/hack-5.15"
+rm -rf target/linux/generic/hack-5.15
+mkdir -p target/linux/generic && cd target/linux/generic
+git init hack-5.15 && cd hack-5.15
+git remote add origin https://github.com/coolsnowwolf/lede.git
+git sparse-checkout set --cone target/linux/generic/hack-5.15
+git pull --depth=1 origin master
+cd ../../../../..
+
+echo "[LOG] 下载完成"
+
+
+
+
+
+
+
+
+
+
+
 
 rm -rf target/linux/generic/hack-5.15/{220-gc_sections*,781-dsa-register*,780-drivers-net*}
 curl -sfL https://raw.githubusercontent.com/openwrt/openwrt/openwrt-22.03/package/kernel/linux/modules/video.mk -o package/kernel/linux/modules/video.mk
