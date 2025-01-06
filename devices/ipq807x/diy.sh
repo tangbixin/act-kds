@@ -5,7 +5,9 @@ SHELL_FOLDER=$(dirname $(readlink -f "$0"))
 bash $SHELL_FOLDER/../common/kernel_5.15.sh
 
 
-
+echo "[log]10当前目录“
+pwd
+ls
 
 
 REPO_URL="https://github.com/tangbixin/boos0629.git"
@@ -30,8 +32,9 @@ git sparse-checkout set target/linux/generic/hack-5.15
 git sparse-checkout set target/linux/generic/pending-5.15
 git sparse-checkout set target/linux/ipq807x
 
+cd -
 
-echo "[log]当前目录“
+echo "[log]11当前目录“
 pwd
 ls
 
