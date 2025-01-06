@@ -13,6 +13,7 @@ ls
 REPO_URL="https://github.com/tangbixin/boos0629.git"
 BRANCH="main"
 
+echo "开始克隆 repository ${REPO_URL} with branch ${BRANCH}"
 # 克隆仓库并初始化稀疏检出
 git clone --depth 1 --branch "${BRANCH}" "${REPO_URL}"
 
