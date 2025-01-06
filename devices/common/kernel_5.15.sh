@@ -34,7 +34,7 @@ echo "[LOG] 检查当前提交是否包含 'kernel: bump 5.15'"
 if [ "$(echo $(git log -1 --pretty=short) | grep 'kernel: bump 5.15')" ]; then
     echo "[LOG] 匹配到 'kernel: bump 5.15'，切换回 latest: $latest"
     git checkout "$latest" || { echo "[ERROR] git checkout $latest 失败"; exit 1; }
-else
+ee
     echo "[LOG] 未匹配到 'kernel: bump 5.15'"
 fi
 
@@ -45,8 +45,9 @@ cp -rf --parents target/linux package/kernel package/boot package/firmware/linux
 }
 echo "[LOG] 文件和目录复制成功 使用 curl 下载了 package/kernel/linux/modules/video.mk"
 
-# ls 本地目录，查看当前结构
+
 echo "[LOG] 当前目录结构："
+pwd
 ls
 
 # 返回上一级目录
@@ -75,8 +76,9 @@ git sparse-checkout set --cone kernel
 git pull --depth=1 origin master
 cd ../../..
 
-# ls 本地目录，查看当前结构
+
 echo "[LOG] 当前目录结构："
+pwd
 ls
 
 # 下载 feeds/packages/net/xtables-addons
@@ -89,8 +91,9 @@ git sparse-checkout set --cone net/xtables-addons
 git pull --depth=1 origin master
 cd ../../../..
 
-# ls 本地目录，查看当前结构
+
 echo "[LOG] 当前目录结构："
+pwd
 ls
 
 # 下载 target/linux/generic/hack-5.15
@@ -103,8 +106,9 @@ git sparse-checkout set --cone target/linux/generic/hack-5.15
 git pull --depth=1 origin master
 cd ../../../../..
 
-# ls 本地目录，查看当前结构
+
 echo "[LOG] 当前目录结构："
+pwd
 ls
 
 echo "[LOG] 下载完成"
@@ -112,8 +116,9 @@ echo "[LOG] 下载完成"
 rm -rf target/linux/generic/hack-5.15/{220-gc_sections*,781-dsa-register*,780-drivers-net*}
 curl -sfL https://raw.githubusercontent.com/openwrt/openwrt/openwrt-22.03/package/kernel/linux/modules/video.mk -o package/kernel/linux/modules/video.mk
 
-# ls 本地目录，查看当前结构
+
 echo "[LOG] 当前目录结构："
+pwd
 ls
 
 echo "tbx1:"
