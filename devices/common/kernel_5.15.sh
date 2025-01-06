@@ -1,35 +1,20 @@
 #!/bin/bash
 
-echo 'tbxbixyn kernel_5.15.sh'
+echo '进入 kernel_5.15.sh'
 
 rm -rf target/linux package/kernel package/boot package/firmware/linux-firmware include/{kernel-*,netfilter.mk}
+
+# 获取 latest commit hash
 latest="$(curl -sfL https://github.com/openwrt/openwrt/commits/master/include | grep -o 'href=".*>kernel: bump 5.15' | head -1 | cut -d / -f 5 | cut -d '"' -f 1)"
 mkdir new; cp -rf .git new/.git
 echo 'bixyn latest------------'
 echo $latest
 latest='f1cd14448221d6114c6c150a8e78fa360bbb47dd'
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#!/bin/bash
+echo "强制指定为 https://github.com/openwrt/openwrt/commit/f1cd14448221d6114c6c150a8e78fa360bbb47dd"
 
 # 进入 new 目录
 echo "[LOG] 尝试进入目录 'new'"
 cd new || { echo "[ERROR] 无法进入目录 'new'，请检查目录是否存在"; exit 1; }
-
-# 显示 latest 的值
-echo "[LOG] latest 的值为: $latest"
 
 # 使用 latest 或切换到 origin/master
 if [ "$latest" ]; then
@@ -58,28 +43,17 @@ echo "[LOG] 开始复制目标文件和目录到上一级"
 cp -rf --parents target/linux package/kernel package/boot package/firmware/linux-firmware include/{kernel-*,netfilter.mk} ../ || {
     echo "[ERROR] 文件或目录复制失败"; exit 1;
 }
-echo "[LOG] 文件和目录复制成功"
+echo "[LOG] 文件和目录复制成功 使用 curl 下载了 package/kernel/linux/modules/video.mk"
+
+# ls 本地目录，查看当前结构
+echo "[LOG] 当前目录结构："
+ls -R .
 
 # 返回上一级目录
 echo "[LOG] 返回上一级目录"
 cd - || { echo "[ERROR] 无法返回上一级目录"; exit 1; }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# 获取 kernel_v 版本号
 kernel_v="$(cat include/kernel-5.15 | grep LINUX_KERNEL_HASH-* | cut -f 2 -d - | cut -f 1 -d ' ')"
 echo 'bixyn kernel_v------------'
 echo $kernel_v
@@ -91,14 +65,6 @@ rm -rf target/linux/generic/pending-5.15/444-mtd-nand-rawnand-add-support-for-To
 
 sh -c "curl -sfL https://github.com/coolsnowwolf/lede/commit/06fcdca1bb9c6de6ccd0450a042349892b372220.patch | patch -d './' -p1 --forward"
 
-
-
-
-
-
-
-
-
 # 下载 feeds/packages/kernel
 echo "[LOG] 下载 feeds/packages/kernel"
 rm -rf feeds/packages/kernel
@@ -108,6 +74,10 @@ git remote add origin https://github.com/openwrt/packages.git
 git sparse-checkout set --cone kernel
 git pull --depth=1 origin master
 cd ../../..
+
+# ls 本地目录，查看当前结构
+echo "[LOG] 当前目录结构："
+ls -R .
 
 # 下载 feeds/packages/net/xtables-addons
 echo "[LOG] 下载 feeds/packages/net/xtables-addons"
@@ -119,6 +89,10 @@ git sparse-checkout set --cone net/xtables-addons
 git pull --depth=1 origin master
 cd ../../../..
 
+# ls 本地目录，查看当前结构
+echo "[LOG] 当前目录结构："
+ls -R .
+
 # 下载 target/linux/generic/hack-5.15
 echo "[LOG] 下载 target/linux/generic/hack-5.15"
 rm -rf target/linux/generic/hack-5.15
@@ -129,23 +103,22 @@ git sparse-checkout set --cone target/linux/generic/hack-5.15
 git pull --depth=1 origin master
 cd ../../../../..
 
+# ls 本地目录，查看当前结构
+echo "[LOG] 当前目录结构："
+ls -R .
+
 echo "[LOG] 下载完成"
-
-
-
-
-
-
-
-
-
-
-
 
 rm -rf target/linux/generic/hack-5.15/{220-gc_sections*,781-dsa-register*,780-drivers-net*}
 curl -sfL https://raw.githubusercontent.com/openwrt/openwrt/openwrt-22.03/package/kernel/linux/modules/video.mk -o package/kernel/linux/modules/video.mk
+
+# ls 本地目录，查看当前结构
+echo "[LOG] 当前目录结构："
+ls -R .
+
 echo "tbx1:"
 ls target/linux/
+
 sed -i "s/tty\(0\|1\)::askfirst/tty\1::respawn/g" target/linux/*/base-files/etc/inittab
 
 echo "
@@ -154,7 +127,3 @@ CONFIG_PACKAGE_kmod-ipt-coova=n
 CONFIG_PACKAGE_kmod-usb-serial-xr_usb_serial_common=n
 CONFIG_PACKAGE_kmod-pf-ring=n
 " >> devices/common/.config
-
-
-
-
