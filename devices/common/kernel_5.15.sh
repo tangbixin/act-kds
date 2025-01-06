@@ -90,22 +90,9 @@ sed -i "s?targets/%S/.*'?targets/%S/$kernel_v'?" include/feeds.mk
 rm -rf target/linux/generic/pending-5.15/444-mtd-nand-rawnand-add-support-for-Toshiba-TC58NVG0S3H.patch
 
 sh -c "curl -sfL https://github.com/coolsnowwolf/lede/commit/06fcdca1bb9c6de6ccd0450a042349892b372220.patch | patch -d './' -p1 --forward"
-
 git clone --depth=1 --single-branch --branch "main" https://github.com/openwrt/packages.git feeds/packages/kernel
 git clone --depth=1 --single-branch --branch "main" https://github.com/openwrt/packages.git feeds/packages/net/xtables-addons
 git clone --depth=1 --single-branch --branch "main" https://github.com/coolsnowwolf/lede.git target/linux/generic/hack-5.15
-
-
-
-# 克隆前清理现有目录
-rm -rf feeds/packages target/linux/generic
-
-
-
-
-
-
-
 
 rm -rf target/linux/generic/hack-5.15/{220-gc_sections*,781-dsa-register*,780-drivers-net*}
 curl -sfL https://raw.githubusercontent.com/openwrt/openwrt/openwrt-22.03/package/kernel/linux/modules/video.mk -o package/kernel/linux/modules/video.mk
@@ -118,3 +105,7 @@ CONFIG_PACKAGE_kmod-ipt-coova=n
 CONFIG_PACKAGE_kmod-usb-serial-xr_usb_serial_common=n
 CONFIG_PACKAGE_kmod-pf-ring=n
 " >> devices/common/.config
+
+
+
+
