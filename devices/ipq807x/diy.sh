@@ -15,8 +15,9 @@ BRANCH="master"
 
 echo "开始克隆 repository ${REPO_URL} with branch ${BRANCH}"
 # 克隆仓库并初始化稀疏检出
-git clone --depth 1 --branch "${BRANCH}" "${REPO_URL}"
-
+git clone --depth 1 --branch "${BRANCH}" "${REPO_URL}" .
+echo "[log]查看远程仓库结构"
+git ls-tree -r HEAD --name-only | grep "target/linux/ipq807x"
 
 # 启用稀疏检出
 git sparse-checkout init --cone
@@ -33,7 +34,8 @@ git sparse-checkout set target/linux/generic/hack-5.15
 git sparse-checkout set target/linux/generic/pending-5.15
 git sparse-checkout set target/linux/ipq807x
 
-git sparse-checkout download
+echo "[log]稀疏检出后，当前下载的目录"
+ls -R target/linux/ipq807x
 
 # cd -
 
