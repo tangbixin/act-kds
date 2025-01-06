@@ -47,7 +47,7 @@ echo "[LOG] 文件和目录复制成功 使用 curl 下载了 package/kernel/lin
 
 # ls 本地目录，查看当前结构
 echo "[LOG] 当前目录结构："
-ls -R .
+ls
 
 # 返回上一级目录
 echo "[LOG] 返回上一级目录"
@@ -77,7 +77,7 @@ cd ../../..
 
 # ls 本地目录，查看当前结构
 echo "[LOG] 当前目录结构："
-ls -R .
+ls
 
 # 下载 feeds/packages/net/xtables-addons
 echo "[LOG] 下载 feeds/packages/net/xtables-addons"
@@ -91,7 +91,7 @@ cd ../../../..
 
 # ls 本地目录，查看当前结构
 echo "[LOG] 当前目录结构："
-ls -R .
+ls
 
 # 下载 target/linux/generic/hack-5.15
 echo "[LOG] 下载 target/linux/generic/hack-5.15"
@@ -105,7 +105,7 @@ cd ../../../../..
 
 # ls 本地目录，查看当前结构
 echo "[LOG] 当前目录结构："
-ls -R .
+ls
 
 echo "[LOG] 下载完成"
 
@@ -114,7 +114,7 @@ curl -sfL https://raw.githubusercontent.com/openwrt/openwrt/openwrt-22.03/packag
 
 # ls 本地目录，查看当前结构
 echo "[LOG] 当前目录结构："
-ls -R .
+ls
 
 echo "tbx1:"
 ls target/linux/
