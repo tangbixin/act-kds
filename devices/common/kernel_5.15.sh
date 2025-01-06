@@ -46,13 +46,17 @@ cp -rf --parents target/linux package/kernel package/boot package/firmware/linux
 echo "[LOG] 文件和目录复制成功 使用 curl 下载了 package/kernel/linux/modules/video.mk"
 
 
-echo "[LOG] 当前目录结构："
+echo "[LOG] 1当前目录结构："
 pwd
 ls
 
 # 返回上一级目录
 echo "[LOG] 返回上一级目录"
 cd - || { echo "[ERROR] 无法返回上一级目录"; exit 1; }
+echo "[LOG] 1.5当前目录结构："
+pwd
+ls
+
 
 # 获取 kernel_v 版本号
 kernel_v="$(cat include/kernel-5.15 | grep LINUX_KERNEL_HASH-* | cut -f 2 -d - | cut -f 1 -d ' ')"
@@ -74,10 +78,10 @@ git init kernel && cd kernel
 git remote add origin https://github.com/openwrt/packages.git
 git sparse-checkout set --cone kernel
 git pull --depth=1 origin master
-cd ../../..
+cd ../../../
 
 
-echo "[LOG] 当前目录结构："
+echo "[LOG] 2当前目录结构："
 pwd
 ls
 
@@ -89,10 +93,10 @@ git init xtables-addons && cd xtables-addons
 git remote add origin https://github.com/openwrt/packages.git
 git sparse-checkout set --cone net/xtables-addons
 git pull --depth=1 origin master
-cd ../../../..
+cd ../../../
 
 
-echo "[LOG] 当前目录结构："
+echo "[LOG] 3当前目录结构："
 pwd
 ls
 
@@ -104,10 +108,10 @@ git init hack-5.15 && cd hack-5.15
 git remote add origin https://github.com/coolsnowwolf/lede.git
 git sparse-checkout set --cone target/linux/generic/hack-5.15
 git pull --depth=1 origin master
-cd ../../../../..
+cd ../../../../
 
 
-echo "[LOG] 当前目录结构："
+echo "[LOG] 4当前目录结构："
 pwd
 ls
 
@@ -117,7 +121,7 @@ rm -rf target/linux/generic/hack-5.15/{220-gc_sections*,781-dsa-register*,780-dr
 curl -sfL https://raw.githubusercontent.com/openwrt/openwrt/openwrt-22.03/package/kernel/linux/modules/video.mk -o package/kernel/linux/modules/video.mk
 
 
-echo "[LOG] 当前目录结构："
+echo "[LOG] 5当前目录结构："
 pwd
 ls
 
