@@ -11,12 +11,74 @@ latest='f1cd14448221d6114c6c150a8e78fa360bbb47dd'
 
 
 
-cd new
-[ "$latest" ] && git reset --hard $latest || git reset --hard origin/master
-git checkout HEAD^
-[ "$(echo $(git log -1 --pretty=short) | grep "kernel: bump 5.15")" ] && git checkout $latest
-cp -rf --parents target/linux package/kernel package/boot package/firmware/linux-firmware include/{kernel-*,netfilter.mk} ../
-cd -
+
+
+
+
+
+
+
+
+
+
+
+#!/bin/bash
+
+# 进入 new 目录
+echo "[LOG] 尝试进入目录 'new'"
+cd new || { echo "[ERROR] 无法进入目录 'new'，请检查目录是否存在"; exit 1; }
+
+# 显示 latest 的值
+echo "[LOG] latest 的值为: $latest"
+
+# 使用 latest 或切换到 origin/master
+if [ "$latest" ]; then
+    echo "[LOG] 执行 git reset --hard，使用哈希值: $latest"
+    git reset --hard "$latest" || { echo "[ERROR] git reset --hard $latest 失败"; exit 1; }
+else
+    echo "[LOG] 执行 git reset --hard origin/master"
+    git reset --hard origin/master || { echo "[ERROR] git reset --hard origin/master 失败"; exit 1; }
+fi
+
+# 切换到前一个提交
+echo "[LOG] 执行 git checkout HEAD^ 切换到前一个提交"
+git checkout HEAD^ || { echo "[ERROR] git checkout HEAD^ 失败"; exit 1; }
+
+# 检查是否匹配 "kernel: bump 5.15"，如果匹配则切回 latest
+echo "[LOG] 检查当前提交是否包含 'kernel: bump 5.15'"
+if [ "$(echo $(git log -1 --pretty=short) | grep 'kernel: bump 5.15')" ]; then
+    echo "[LOG] 匹配到 'kernel: bump 5.15'，切换回 latest: $latest"
+    git checkout "$latest" || { echo "[ERROR] git checkout $latest 失败"; exit 1; }
+else
+    echo "[LOG] 未匹配到 'kernel: bump 5.15'"
+fi
+
+# 复制指定目录和文件
+echo "[LOG] 开始复制目标文件和目录到上一级"
+cp -rf --parents target/linux package/kernel package/boot package/firmware/linux-firmware include/{kernel-*,netfilter.mk} ../ || {
+    echo "[ERROR] 文件或目录复制失败"; exit 1;
+}
+echo "[LOG] 文件和目录复制成功"
+
+# 返回上一级目录
+echo "[LOG] 返回上一级目录"
+cd - || { echo "[ERROR] 无法返回上一级目录"; exit 1; }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 kernel_v="$(cat include/kernel-5.15 | grep LINUX_KERNEL_HASH-* | cut -f 2 -d - | cut -f 1 -d ' ')"
 echo 'bixyn kernel_v------------'
@@ -32,6 +94,7 @@ sh -c "curl -sfL https://github.com/coolsnowwolf/lede/commit/06fcdca1bb9c6de6ccd
 # 克隆前清理现有目录
 rm -rf feeds/packages target/linux/generic
 # 克隆并只获取 kernel 和 xtables-addons 目录
+
 git clone --depth=1 --filter=blob:none --sparse https://github.com/openwrt/packages.git
 cd packages
 git sparse-checkout init --cone
