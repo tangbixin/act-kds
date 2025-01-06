@@ -33,7 +33,7 @@ git sparse-checkout set target/linux/generic/hack-5.15
 git sparse-checkout set target/linux/generic/pending-5.15
 git sparse-checkout set target/linux/ipq807x
 
-cd -
+# cd -
 
 echo "[log]11当前目录"
 pwd
