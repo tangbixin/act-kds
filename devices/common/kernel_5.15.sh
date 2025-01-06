@@ -93,7 +93,7 @@ git init xtables-addons && cd xtables-addons
 git remote add origin https://github.com/openwrt/packages.git
 git sparse-checkout set --cone net/xtables-addons
 git pull --depth=1 origin master
-cd ../../../
+cd ../../../../
 
 
 echo "[LOG] 3当前目录结构："
