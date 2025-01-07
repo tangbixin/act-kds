@@ -17,15 +17,17 @@ sed -i '/	refresh_config();/d' scripts/feeds
 #sed -i '$a src-git kiddin9 https://github.com/kiddin9/openwrt-packages.git;master' feeds.conf.default
 sed -i '$a src-git kiddin9 https://github.com/mopenwrt/kiddin9-openwrt-packages.git;master' feeds.conf.default
 
-
-
-
-
 }
 
 ./scripts/feeds update -a
 ./scripts/feeds install -a -p kiddin9 -f
 ./scripts/feeds install -a
+
+echo "kidden9-1"
+pwd
+ls feeds/
+
+
 cd feeds/kiddin9; git pull; cd -
 
 mv -f feeds/kiddin9/r81* tmp/
@@ -98,6 +100,6 @@ fi
 ) &
 
 
-echo "kidden9"
+echo "kidden9-2"
 pwd
 ls feeds/
