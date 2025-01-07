@@ -23,10 +23,10 @@ sed -i '$a src-git kiddin9 https://github.com/mopenwrt/kiddin9-openwrt-packages.
 ./scripts/feeds install -a -p kiddin9 -f
 ./scripts/feeds install -a
 
-echo "kidden9-1"
+echo "kidden9-111"
 pwd
 ls feeds/
-
+echo "------------------------------------------"
 
 cd feeds/kiddin9; git pull; cd -
 
