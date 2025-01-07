@@ -14,8 +14,9 @@ sed -i "s/procd-ujail//" include/target.mk
 
 sed -i '/	refresh_config();/d' scripts/feeds
 [ ! -f feeds.conf ] && {
+sed -i '$a src-git kiddin9 https://github.com/kiddin9/openwrt.git;master' feeds.conf.default
 #sed -i '$a src-git kiddin9 https://github.com/kiddin9/openwrt-packages.git;master' feeds.conf.default
-sed -i '$a src-git kiddin9 https://github.com/mopenwrt/kiddin9-openwrt-packages.git;master' feeds.conf.default
+#sed -i '$a src-git kiddin9 https://github.com/mopenwrt/kiddin9-openwrt-packages.git;master' feeds.conf.default
 
 }
 
