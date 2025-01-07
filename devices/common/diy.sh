@@ -1,5 +1,15 @@
 #!/bin/bash
 #=================================================
+echo
+echo
+echo
+echo
+echo
+echo "common diy.................................."
+
+
+
+
 shopt -s extglob
 kernel_v="$(cat include/kernel-5.10 | grep LINUX_KERNEL_HASH-* | cut -f 2 -d - | cut -f 1 -d ' ')"
 echo "KERNEL=${kernel_v}" >> $GITHUB_ENV || true
@@ -15,9 +25,6 @@ sed -i "s/procd-ujail//" include/target.mk
 sed -i '/	refresh_config();/d' scripts/feeds
 [ ! -f feeds.conf ] && {
 sed -i '$a src-git kiddin9 https://github.com/kiddin9/openwrt.git;master' feeds.conf.default
-#sed -i '$a src-git kiddin9 https://github.com/kiddin9/openwrt-packages.git;master' feeds.conf.default
-#sed -i '$a src-git kiddin9 https://github.com/mopenwrt/kiddin9-openwrt-packages.git;master' feeds.conf.default
-
 }
 
 ./scripts/feeds update -a
