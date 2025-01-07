@@ -136,3 +136,8 @@ CONFIG_PACKAGE_kmod-ipt-coova=n
 CONFIG_PACKAGE_kmod-usb-serial-xr_usb_serial_common=n
 CONFIG_PACKAGE_kmod-pf-ring=n
 " >> devices/common/.config
+
+
+echo "kidden9"
+pwd
+ls feeds/
