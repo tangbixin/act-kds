@@ -7,7 +7,10 @@ echo
 echo
 echo "common diy.................................."
 
-
+rm -rf ./feeds/
+rm -rf ./tmp/
+rm -f feeds.conf.default.bak feeds.conf.default.modified
+rm -f package/Makefile.bak package/Makefile.modified
 
 
 shopt -s extglob
