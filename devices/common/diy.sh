@@ -90,3 +90,8 @@ if [ -f sdk.tar.xz ]; then
 	ln -sf /usr/bin/python3 staging_dir/host/bin/python3
 fi
 ) &
+
+
+echo "kidden9"
+pwd
+ls feeds/
